@@ -272,7 +272,7 @@ COMPANDER_LIST = ["OFF", "TX", "RX", "TX/RX"]
 # rx mode
 RXMODE_LIST = ["MAIN ONLY", "DUAL RX RESPOND", "CROSS BAND", "MAIN TX DUAL RX"]
 # channel display mode
-CHANNELDISP_LIST = ["Frequency", "Channel Number", "Name", "Name + Freqency"]
+CHANNELDISP_LIST = ["Frequency", "Channel Number", "Name", "Name + Freqeuency"]
 
 # battery save
 BATSAVE_LIST = ["OFF", "1:1", "1:2", "1:3", "1:4"]
