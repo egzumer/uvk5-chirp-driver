@@ -58,3 +58,79 @@ index d2ca7711..d0e4dfc0 100644
  
  
  @with_session
+diff --git a/chirp/drivers/__init__.py b/chirp/drivers/__init__.py
+index 649f85ab..c8940547 100644
+--- a/chirp/drivers/__init__.py
++++ b/chirp/drivers/__init__.py
+@@ -1,16 +1,8 @@
+-import os
+ import sys
+-from glob import glob
+-import warnings
++import pkgutil
+ 
+-# This won't be here in the frozen build because we convert this file to
+-# a static list of driver modules to import.
+-warnings.filterwarnings('once', category=DeprecationWarning,
+-                        module=__name__)
+-
+-module_dir = os.path.dirname(sys.modules["chirp.drivers"].__file__)
++module_dir = sys.modules["chirp.drivers"].__path__
+ __all__ = []
+-for i in sorted(glob(os.path.join(module_dir, "*.py"))):
+-    name = os.path.basename(i)[:-3]
+-    if not name.startswith("__"):
+-        __all__.append(name)
++for i in pkgutil.iter_modules(module_dir):
++    __all__.append(i.name)
++__all__.sort()
+diff --git a/chirp/directory.py b/chirp/directory.py
+index e25ae10d..618e2cf1 100644
+--- a/chirp/directory.py
++++ b/chirp/directory.py
+@@ -14,10 +14,9 @@
+ # You should have received a copy of the GNU General Public License
+ # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ 
+-import glob
+ import os
+ import logging
+-import sys
++import chirp.drivers
+ 
+ from chirp import chirp_common, errors
+ 
+@@ -172,27 +171,10 @@ def get_radio_by_image(image_file):
+ 
+ 
+ def import_drivers(limit=None):
+-    frozen = getattr(sys, 'frozen', False)
+-    if sys.platform == 'win32' and frozen:
+-        # We are in a frozen win32 build, so we can not glob
+-        # the driver files, but we do not need to anyway
+-        import chirp.drivers
+-        for module in chirp.drivers.__all__:
+-            try:
+-                __import__('chirp.drivers.%s' % module)
+-            except Exception as e:
+-                print('Failed to import %s: %s' % (module, e))
+-        return
+-
+-    # Safe import of everything in chirp/drivers. We need to import them
+-    # to get them to register, but should not abort if one import fails
+-    chirp_module_base = os.path.dirname(os.path.abspath(__file__))
+-    driver_files = glob.glob(os.path.join(chirp_module_base,
+-                                          'drivers',
+-                                          '*.py'))
+-    for driver_file in driver_files:
+-        module, ext = os.path.splitext(driver_file)
+-        driver_module = os.path.basename(module)
+-        if limit and driver_module not in limit:
++    for module in chirp.drivers.__all__:
++        if limit and module not in limit:
+             continue
+-        __import__('chirp.drivers.%s' % driver_module)
++        try:
++            __import__('chirp.drivers.%s' % module)
++        except Exception as e:
++            print('Failed to import %s: %s' % (module, e))

@@ -7,3 +7,4 @@ requests
 yattag 
 wheel 
 importlib-resources
+cx_Freeze
