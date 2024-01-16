@@ -1,4 +1,4 @@
-# Quansheng UV-K5 driver (c) 2023 Jacek Lipkowski <sq5bpf@lipkowsklastesi.org>
+# Quansheng UV-K5 driver (c) 2023 Jacek Lipkowski <sq5bpf@lipkowski.org>
 # Adapted For UV-K5 EGZUMER custom software By EGZUMER, JOC2 
 #
 # based on template.py Copyright 2012 Dan Smith <dsmith@danplanet.com>
@@ -48,7 +48,7 @@ DEBUG_SHOW_OBFUSCATED_COMMANDS = False
 DEBUG_SHOW_MEMORY_ACTIONS = False
 
 # TODO: remove the driver version when it's in mainline chirp
-DRIVER_VERSION = "Quansheng UV-K5/K6/5R driver ver:2024/01/15 (c) egzumer"
+DRIVER_VERSION = "Quansheng UV-K5/K6/5R driver ver:2024/01/16 (c) egzumer"
 DRIVER_VERSION_UPDATE = "https://github.com/egzumer/uvk5-chirp-driver"
 VALEUR_COMPILER = "ENABLE"
 
@@ -359,7 +359,7 @@ COMPANDER_LIST = ["OFF", "TX", "RX", "TX/RX"]
 # rx mode
 RXMODE_LIST = ["MAIN ONLY", "DUAL RX RESPOND", "CROSS BAND", "MAIN TX DUAL RX"]
 # channel display mode
-CHANNELDISP_LIST = ["Frequency", "Channel Number", "Name", "Name + Frequency"]
+CHANNELDISP_LIST = ["Frequency (FREQ)", "CHANNEL NUMBER", "NAME", "Name + Frequency (NAME + FREQ)"]
 
 # TalkTime
 TALK_TIME_LIST = ["30 sec", "1 min", "2 min", "3 min", "4 min", "5 min", "6 min", "7 min", "8 min", "9 min", "15 min"]
@@ -1863,7 +1863,7 @@ class UVK5Radio(chirp_common.CloneModeRadio):
         val = RadioSettingValueBoolean(_mem._0x0f47.Setting_mic_bar)
         micBarSetting = RadioSetting("_0x0f47.Setting_mic_bar", "Microphone Bar display (MicBar)", val)
 
-        tmpchdispmode = listDef(_mem.channel_display_mode, CHANNELDISP_LIST, "Frequency")
+        tmpchdispmode = listDef(_mem.channel_display_mode, CHANNELDISP_LIST, "Frequency (FREQ)")
         val = RadioSettingValueList(CHANNELDISP_LIST, None, tmpchdispmode)
         chDispSetting = RadioSetting("channel_display_mode", "Channel display mode (ChDisp)", val)
 
