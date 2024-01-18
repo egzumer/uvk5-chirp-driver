@@ -2111,9 +2111,13 @@ class UVK5Radio(chirp_common.CloneModeRadio):
         radioSettingGroup = RadioSettingGroup("tx_power_calibration", "TX power")
         calibration.append(radioSettingGroup)
 
+        isWide = self._memobj.BUILD_OPTIONS.ENABLE_WIDE_RX
+        BANDS = BANDS_STANDARD if not isWide else BANDS_WIDE 
         for band in range(0,7):
-            appendLabel(radioSettingGroup, "=" * 6 + " TX power band " + str(band+1) + " " + "=" * 300, "=" * 300)
-            powers = {"low": "Low", "mid": "Medium", "hi": "High"}
+            appendLabel(radioSettingGroup, "=" * 6 + " TX power band " + str(band+1) +
+                " ( " + str(round(BANDS[band][0])) + "M - " + str(round(BANDS[band][1])) +
+                "M" + " ) " + "=" * 200, "=" * 300)   
+             powers = {"low": "Low", "mid": "Medium", "hi": "High"}
             for pwr in powers:
                 appendLabel(radioSettingGroup, powers[pwr])
                 bounds = ["lower", "center", "upper"]
